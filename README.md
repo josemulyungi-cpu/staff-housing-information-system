@@ -25,11 +25,7 @@ Before starting, ensure the following are installed on your machine:
 | Software       | Version    | Download Link                                      |
 | -------------- | ---------- | -------------------------------------------------- |
 | **Node.js**    | v18 or v20 | https://nodejs.org/                                |
-| **npm**        | v9+        | Comes with Node.js                                 |
-| **WampServer** | Latest     | https://www.wampserver.com/                        |
 | **MySQL**      | 5.7+ / 8+  | Included with WampServer                           |
-| **Git**        | Latest     | https://git-scm.com/ (optional)                    |
-
 ### Verify installations
 
 Open a **Command Prompt** or **PowerShell** and run:
