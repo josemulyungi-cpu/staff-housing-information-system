@@ -7,14 +7,47 @@ Digital platform for application, tracking, and allocation of rental housing uni
 
 ## Table of Contents
 
-1. [Prerequisites](#prerequisites)
-2. [Project Structure](#project-structure)
-3. [Backend Setup](#backend-setup)
-4. [Frontend Setup](#frontend-setup)
-5. [Running the Application](#running-the-application)
-6. [Default Login Credentials](#default-login-credentials)
-7. [API Endpoints Reference](#api-endpoints-reference)
-8. [Troubleshooting](#troubleshooting)
+1. [Getting Started (from Zip File)](#getting-started-from-zip-file)
+2. [Prerequisites](#prerequisites)
+3. [Project Structure](#project-structure)
+4. [Backend Setup](#backend-setup)
+5. [Frontend Setup](#frontend-setup)
+6. [Running the Application](#running-the-application)
+7. [Default Login Credentials](#default-login-credentials)
+8. [API Endpoints Reference](#api-endpoints-reference)
+9. [Troubleshooting](#troubleshooting)
+
+---
+
+## Getting Started (from Zip File)
+
+### Step 1: Extract the zip file
+
+1. Locate the downloaded `PROJECT housing.zip` file (e.g. in your **Downloads** folder)
+2. **Right-click** the zip file → select **Extract All…**
+3. Choose a destination folder (e.g. `C:\Users\YourName\Desktop\`) and click **Extract**
+4. This creates a folder called `PROJECT housing` containing the full project
+
+> **Tip:** You can also use tools like **7-Zip** or **WinRAR** to extract.
+
+### Step 2: Open the project folder
+
+Navigate into the extracted folder. You should see:
+
+```
+PROJECT housing/
+├── backend/       ← Node.js API server
+├── frontend/      ← Static HTML/CSS/JS frontend
+├── LICENSE
+└── README.md      ← This file
+```
+
+### Step 3: Follow setup instructions
+
+1. Complete the [Prerequisites](#prerequisites) below
+2. Follow [Backend Setup](#backend-setup) to install dependencies and set up the database
+3. Start the backend server
+4. Open [Frontend Setup](#frontend-setup) — just open the HTML file in your browser
 
 ---
 
@@ -26,6 +59,7 @@ Before starting, ensure the following are installed on your machine:
 | -------------- | ---------- | -------------------------------------------------- |
 | **Node.js**    | v18 or v20 | https://nodejs.org/                                |
 | **MySQL**      | 5.7+ / 8+  | Included with WampServer                           |
+
 ### Verify installations
 
 Open a **Command Prompt** or **PowerShell** and run:
@@ -68,29 +102,12 @@ PROJECT housing/
 │   ├── .env                  # Environment variables
 │   └── package.json
 │
-├── frontend/                 # Vite + Vanilla JS SPA
-│   ├── index.html            # HTML shell
-│   ├── vite.config.js        # Vite config (dev proxy to port 5000)
-│   ├── src/
-│   │   ├── main.js           # SPA router & route registration
-│   │   ├── api.js            # Fetch wrapper with JWT
-│   │   ├── router.js         # Hash-based SPA router
-│   │   ├── components/
-│   │   │   └── navbar.js     # Dynamic navbar
-│   │   ├── pages/
-│   │   │   ├── login.js
-│   │   │   ├── register.js
-│   │   │   ├── staffDashboard.js
-│   │   │   ├── housingList.js
-│   │   │   ├── adminDashboard.js
-│   │   │   ├── adminHousing.js
-│   │   │   ├── adminApplications.js
-│   │   │   └── adminEmployers.js
-│   │   └── styles/
-│   │       └── style.css     # All CSS styles
-│   └── package.json
+├── frontend/                 # Static HTML/CSS/JS (no build tools needed)
+│   ├── index.html            # Main HTML page — open directly in browser
+│   ├── style.css             # All CSS styles
+│   └── app.js                # All application logic (SPA router, pages, API)
 │
-├── prd                       # Product Design Report
+├── LICENSE
 └── README.md                 # This file
 ```
 
@@ -241,72 +258,33 @@ You should see:
 
 ## Frontend Setup
 
-### Step 1: Open a NEW terminal (keep the backend running)
+The frontend is **plain HTML, CSS, and JavaScript** — no build tools or npm required.
 
-```bash
-cd frontend
-```
+### Step 1: Open the frontend
 
-### Step 2: Install dependencies
+Simply open the file in your browser:
 
-```bash
-npm install
-```
+- **Windows:** Double-click `frontend/index.html`, or right-click → **Open with** → your browser
+That's it — no installation, no build step needed.
 
-This installs:
-
-| Package | Purpose                               |
-| ------- | ------------------------------------- |
-| vite    | Fast development server & build tool  |
-
-### Step 3: Start the frontend dev server
-
-```bash
-npm run dev
-```
-
-**Expected output:**
-
-```
-  VITE v7.x.x  ready in XXX ms
-
-  ➜  Local:   http://localhost:3000/
-  ➜  Network: use --host to expose
-```
-
-### Step 4: Open the application
-
-Navigate to:
-
-```
-http://localhost:3000
-```
-
-You should see the HIMS landing page with **Login** and **Register** buttons.
-
-> **Note:** The Vite dev server automatically proxies `/api/*` requests to `http://localhost:5000`, so both servers need to be running simultaneously.
+> **Important:** The backend server must be running at `http://localhost:5000` for the app to work. The frontend makes API calls directly to that address.
 
 ---
 
 ## Running the Application
 
-You need **two terminals** running simultaneously:
-
-### Terminal 1 – Backend
+### Terminal 1 – Start the Backend
 
 ```bash
 cd backend
 npm run dev
 ```
 
-### Terminal 2 – Frontend
+### Open the Frontend
 
-```bash
-cd frontend
-npm run dev
-```
+Open `frontend/index.html` directly in your web browser (double-click the file).
 
-Then open **http://localhost:3000** in your browser.
+Then you should see the HIMS landing page with **Login** and **Register** buttons.
 
 ---
 
@@ -412,10 +390,10 @@ If port 5000 is in use, change the `PORT` value in `.env`:
 PORT=5001
 ```
 
-If port 3000 is in use, change it in `frontend/vite.config.js`:
+Then also update the `API_BASE` variable at the top of `frontend/app.js` to match:
 
 ```js
-server: { port: 3001 }
+var API_BASE = "http://localhost:5001/api";
 ```
 
 ### Prisma Studio (visual database browser)
@@ -431,19 +409,20 @@ Opens a browser at `http://localhost:5555` with a GUI for all tables.
 
 ### Frontend not connecting to backend
 
-- Make sure **both** terminals are running (backend on port 5000, frontend on port 3000)
-- The Vite proxy (`vite.config.js`) forwards `/api/*` to `http://localhost:5000`
-- If you changed the backend port, update `vite.config.js` accordingly
+- Make sure the backend is running on port 5000 before opening `frontend/index.html`
+- The frontend calls `http://localhost:5000/api` directly — no proxy is used
+- If you changed the backend port, update `API_BASE` in `frontend/app.js` accordingly
+- Check the browser console (F12 → Console) for CORS or network errors
 
 ---
 
 ## Technology Stack
 
-| Layer          | Technology                     |
-| -------------- | ------------------------------ |
-| Frontend       | Vite + Vanilla JavaScript + CSS |
-| Backend        | Node.js + Express              |
-| Database       | MySQL (WampServer)             |
-| ORM            | Prisma 5                       |
-| Authentication | JWT (jsonwebtoken)             |
-| Password Hash  | bcrypt                         |
+| Layer          | Technology                          |
+| -------------- | ----------------------------------- |
+| Frontend       | HTML + CSS + Vanilla JavaScript     |
+| Backend        | Node.js + Express                   |
+| Database       | MySQL (WampServer)                  |
+| ORM            | Prisma 5                            |
+| Authentication | JWT (jsonwebtoken)                  |
+| Password Hash  | bcrypt                              |

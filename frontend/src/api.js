@@ -1,4 +1,6 @@
-const API_BASE = "/api";
+const API_BASE = window.location.protocol === "file:"
+  ? "http://localhost:5000/api"
+  : "/api";
 
 /**
  * Get stored auth token
