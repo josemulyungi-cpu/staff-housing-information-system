@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Employer {
+  id            Int        @id @default(autoincrement())
+  employer_id   String     @unique
+  employer_name String
+  authorized    Boolean    @default(false)
+  employees     Employee[]
+
+  @@map("employer")
+}
+
+model Employee {
+  id                 Int            @id @default(autoincrement())
+  employee_id        String         @unique
+  password_hash      String
+  full_name          String
+  gender             String
+  date_of_birth      DateTime
+  year_of_employment Int
+  employer_id        Int
+  employer           Employer       @relation(fields: [employer_id], references: [id])
+  registrations      Registration[]
+
+  @@map("employees")
+}
+
+model Admin {
+  id            Int    @id @default(autoincrement())
+  username      String @unique
+  password_hash String
+
+  @@map("admins")
+}
+
+model HouseType {
+  id              Int       @id @default(autoincrement())
+  house_type_name String    @unique
+  housing         Housing[]
+
+  @@map("house_type")
+}
+
+model Housing {
+  id                      Int            @id @default(autoincrement())
+  region                  String         @default("Nairobi")
+  county                  String
+  town_location           String
+  block_name              String
+  floor_number            Int
+  house_type_id           Int
+  monthly_rent            Decimal
+  payment_duration_months Int
+  occupancy_status        String         @default("vacant")
+  house_type              HouseType      @relation(fields: [house_type_id], references: [id])
+  registrations           Registration[]
+
+  @@map("housing")
+}
+
+model Registration {
+  id                 Int      @id @default(autoincrement())
+  employee_id        Int
+  housing_id         Int
+  application_status String   @default("pending")
+  created_at         DateTime @default(now())
+  employee           Employee @relation(fields: [employee_id], references: [id])
+  housing            Housing  @relation(fields: [housing_id], references: [id])
+
+  @@unique([employee_id])
+  @@map("registrations")
+}
